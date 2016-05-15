@@ -1,0 +1,33 @@
+<html>
+<head>
+<meta charset="utf-8" />
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<meta name="description" content="GOULD middleware">
+<meta name="keywords" content="GOULD,JSP,JavaScript,middleware,multi-tier,postgres">
+<meta name="author" content="Mauro DePalma">
+
+<title>Delphi Home Page</title>
+
+<script type="text/javascript">
+function autosubmit ()
+{
+ var prepare = document.getElementById("prepare");
+ prepare.submit();
+}
+<!-- window.onload = autosubmit; -->
+</script>
+</head>
+<body onload="autosubmit()">
+
+<form id="prepare" method="post" action="oracle">
+ <input type="hidden" name="request" value="setting">
+ <input type="hidden" name="name" value="landing">
+</form>
+
+<br><br>
+<center>
+<img src="images/loading.gif">
+</center>
+
+</body>
+</html>

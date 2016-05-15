@@ -1,0 +1,23 @@
+
+ #nav {
+  margin:10;
+  padding:0;
+  list-style:none;
+  text-align:right;
+ }
+ #nav li {
+  display:inline;
+ }
+ #nav a {
+  display:inline-block;
+  padding:10px;
+ }
+
+ a {
+  color:#0000cc;
+  text-decoration:none;
+  font-weight:bold;
+ }
+ a:hover {
+  text-decoration:underline;
+ }

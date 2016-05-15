@@ -1,0 +1,3 @@
+# Properties definining the delphi application 
+dbms = postgres
+redirect = reload.jsp

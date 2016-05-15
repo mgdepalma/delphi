@@ -1,0 +1,6 @@
+<Context>
+ <Resource name="jdbc/oracle" auth="Container"
+  type="javax.sql.DataSource" driverClassName="oracle.jdbc.OracleDriver"
+  username="scott" password="tiger" maxActive="2" maxIdle="1" maxWait="50"
+  url="jdbc:oracle:thin:@mitre:1521:oracle"/>
+</Context>

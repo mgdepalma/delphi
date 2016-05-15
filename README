@@ -1,0 +1,52 @@
+delphi - a multitier architecture system using Java servlet for middleware
+
+[Building]
+Doing a `make' will build "delphi.war"
+
+[Installing]
+As an administrator copy "delphi.war" to $CATALINA_HOME/webapps/
+
+The project has the following hierarchy:
+.
+|- artifact/
+|  `- servlet-api.jar	// provided by apache-tomcat-8.0.24
+|
+|- schema/		// SQL schema files
+|  |- oracle.sql	// ..Oracle 10g (mostly untested)
+|  `- postgres.sql	// ..PostgreSQL 9.4
+|
+|- servlet/
+|  |- META-INF/
+|  |  |- context.xml,oracle
+|  |  `- context.xml,postgres
+|  |
+|  |- WEB-INF/
+|  |  |- lib/
+|  |  |  |- oracle-jdbc.jar
+|  |  |  `- postgresql-jdbc.jar
+|  |  |
+|  |  |- properties	// properties of the delphi application
+|  |  |- web.xml,generic
+|  |  `- web.xml,resource
+|  |
+|  |- images/
+|  |  |- loading.gif	// animated GIF
+|  ...
+|  |- script/
+|  |  |- functions.js
+|  |  |- jquery-1.11.3.js
+|  |  |- style.css
+|  ...
+|     `- sha1.js
+|...
+|  |- index.html
+|  |- mainpage.jsp
+|  |- location.jsp
+|  |- profiles.jsp
+|  |- services.jsp
+|  `- reload.jsp	// default redirect (see, WEB-INF/properties)
+|
+|- Makefile		// main GNU make description file
+|- oracle.java		// Java servlet main class
+`- SHA1.java		// server side for the library 'sha1.js'
+
