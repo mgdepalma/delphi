@@ -1,0 +1,8 @@
+
+[ Apache Tomcat 10.1 ] https://tomcat.apache.org/download-10.cgi
+/srv/tomcat -> apache-tomcat-10.1.33
+servlet-api.jar -> /srv/tomcat/lib/servlet-api.jar
+
+[ PostgreSQL 14.15 (Java 8 and newer) ] https://jdbc.postgresql.org/download/
+postgresql-42.7.4.jar -> webapps/delphi/WEB-INF/lib/postgresql-jdbc.jar
+
