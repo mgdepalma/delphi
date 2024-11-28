@@ -1,3 +1,6 @@
+##
+# 2024 Generations Linux <bugs@softcraft,org>
+#
 delphi - a multitier architecture system using Java servlet for middleware
 
 [Building]
@@ -8,12 +11,14 @@ As an administrator copy "delphi.war" to $CATALINA_HOME/webapps/
 
 The project has the following hierarchy:
 .
-|- artifact/
-|  `- servlet-api.jar	// provided by apache-tomcat-8.0.24
+|- artifact/            // used only for building
+|  `- servlet-api.jar	// provided by apache-tomcat-10.1.26
 |
 |- schema/		// SQL schema files
 |  |- oracle.sql	// ..Oracle 10g (mostly untested)
-|  `- postgres.sql	// ..PostgreSQL 9.4
+|  `- postgres.sql	// ..PostgreSQL 14.5
+.     [create user middleware wih createdb priv]
+.     $ createdb -U middleware -E UTF8 -T template0 delphi
 |
 |- servlet/
 |  |- META-INF/
@@ -24,6 +29,7 @@ The project has the following hierarchy:
 |  |  |- lib/
 |  |  |  |- oracle-jdbc.jar
 |  |  |  `- postgresql-jdbc.jar
+.  .  .     $ psql -d delphi -U middleware < postgresql-jdbc.jar
 |  |  |
 |  |  |- properties	// properties of the delphi application
 |  |  |- web.xml,generic
@@ -47,6 +53,7 @@ The project has the following hierarchy:
 |  `- reload.jsp	// default redirect (see, WEB-INF/properties)
 |
 |- Makefile		// main GNU make description file
-|- oracle.java		// Java servlet main class
 `- SHA1.java		// server side for the library 'sha1.js'
+|- oracle.java		// Java servlet main class
 
+#/

@@ -3,8 +3,6 @@
 //
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -16,9 +14,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.annotation.WebServlet;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.annotation.WebServlet;
 import javax.sql.DataSource;
 
 import delphi.*;
@@ -50,6 +61,22 @@ public class oracle extends HttpServlet
     private String DBGhash;
     private String DBGdigest; 
 
+    // diagnostics report
+    protected void diagnostics(PrintWriter out, String report)
+    {
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<meta charset=\"UTF-8\" />");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<ul><b><i>");
+        out.println("<font size=+2; color=red>" + report + "</font>");
+        out.println("</i></b></ul>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+
     // establish connection with database backend
     protected Connection getConnection(HttpServletRequest request,
 			HttpServletResponse response, PrintWriter out)
@@ -76,8 +103,10 @@ public class oracle extends HttpServlet
         try {
            _driver = prop.getProperty("dbms");
 	   ds = (DataSource)ctx.lookup("java:comp/env/jdbc/" + _driver);
+
 	   _timestamp = _driver.equals("oracle")
 				? "current_timestamp" : "clock_timestamp()";
+
         } catch (NamingException ex) {
 	   printStackTrace(out, "NamingException", ex);
            return null;
@@ -91,7 +120,7 @@ public class oracle extends HttpServlet
 	   if (param != null) _timeout = Integer.parseInt(param);
 
 	   _redirect = prop.getProperty("redirect");
-	   _salt = getSetting(connection, "salt");	// default HMAC data value
+	   _salt = getSetting(connection, "salt");  // default HMAC data value
         } catch (SQLException ex) {
 	   printStackTrace(out, "SQLException", ex);
 	}
@@ -99,8 +128,8 @@ public class oracle extends HttpServlet
     }
 
     // fetch session ID attribute
-    protected String getAttribute(Connection connection, String sessid, String name)
-        throws SQLException
+    protected String getAttribute(Connection connection, String sessid,
+					String name) throws SQLException
     {
 	Statement st = connection.createStatement();
 	ResultSet rs = st.executeQuery("SELECT userid FROM sessions" +
@@ -172,8 +201,10 @@ public class oracle extends HttpServlet
     }
 
     // update data of existing session or insert data for one just created 
-    protected String sessionEnter(Connection connection, String sessid, Long inet)
-        throws SQLException
+    protected String sessionEnter(Connection connection,
+				  String sessid,
+				  Long inet)
+	throws SQLException
     {
 	Statement st = connection.createStatement();
 	String sql = "SELECT sessid,userid FROM sessions WHERE inet = "+ inet;
@@ -212,12 +243,12 @@ public class oracle extends HttpServlet
 
     // incoming HttpServletRequest central processing`
     protected void processRequest(HttpServletRequest request,
-					HttpServletResponse response)
+				  HttpServletResponse response)
 	throws ServletException, IOException
     {
         PrintWriter out = response.getWriter();
-
 	String command = request.getParameter("request");
+
 	if (command == null) {
 	  response.sendError(406);	// Not Acceptable
 	  return;
@@ -226,8 +257,9 @@ public class oracle extends HttpServlet
         try {
            Connection connection = getConnection(request, response, out);
 	   if (connection == null) {
-	     //response.sendError(403);	// Forbidden
-	     response.sendError(402);	// Payment Required
+	     response.sendError(403);	// Forbidden
+	     //response.sendError(402);	// Payment Required
+             //diagnostics(out, "[META-INF/context.xml] connection failed!");
 	     return;
 	   }
 
@@ -262,6 +294,7 @@ public class oracle extends HttpServlet
 		 out.println( getServerName() );
 	       }
 	       catch (UnknownHostException ex) {
+                 printStackTrace(out, "UnknownHostException", ex);
 	       }
 	     }
 	     else if (command.equals("setting")) {

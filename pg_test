@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -e PostgreSQLExample.class ] || javac PostgreSQLExample.java
+exec java -cp .:artifact/postgresql-42.7.4.jar PostgreSQLExample
+#/

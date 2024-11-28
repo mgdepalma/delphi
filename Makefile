@@ -1,16 +1,22 @@
+##
 # delphi servlet make description file
 
 PRODUCT=delphi
 WARPATH=servlet/WEB-INF/classes
-SERVAPI=artifact/servlet-api.jar
+#SERVAPI=artifact/servlet-api.jar
+SERVAPI=/srv/tomcat/lib/servlet-api.jar
+
+JDBC_ORACLE="WEB-INF/lib/oracle-jdbc.jar"
+JDBC_POSTGRES="WEB-INF/lib/postgresql-jdbc.jar"
+#JAVADBCONNECTION="${JDBC_ORACLE ${JDBC_POSTGRES}"
+JAVADBCONNECTION="${JDBC_POSTGRES}"
 
 # contents of war file
 MANIFEST=\
 META-INF/context.xml \
 WEB-INF/classes/oracle.class \
 WEB-INF/classes/delphi/SHA1.class \
-WEB-INF/lib/postgresql-jdbc.jar \
-WEB-INF/lib/oracle-jdbc.jar \
+${JAVADBCONNECTION} \
 WEB-INF/properties \
 WEB-INF/web.xml \
 images/dice.png \

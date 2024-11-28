@@ -122,7 +122,8 @@ public abstract class SHA1 {
   for (int i = 0; i < binarray.length * 4; i++) {   
     char a = (char) hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8 + 4)) & 0xF);   
     char b = (char) hex_tab.charAt((binarray[i >> 2] >> ((3 - i % 4) * 8)) & 0xF);   
-    str += (new Character(a).toString() + new Character(b).toString());   
+    //str += (new Character(a).toString() + new Character(b).toString());   
+    str += Character.toString(a) + Character.toString(b);
   }   
   return str;   
  }   
