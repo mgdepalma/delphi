@@ -8,15 +8,13 @@ SERVAPI=/srv/tomcat/lib/servlet-api.jar
 
 JDBC_ORACLE="WEB-INF/lib/oracle-jdbc.jar"
 JDBC_POSTGRES="WEB-INF/lib/postgresql-jdbc.jar"
-#JAVADBCONNECTION="${JDBC_ORACLE ${JDBC_POSTGRES}"
-JAVADBCONNECTION="${JDBC_POSTGRES}"
 
 # contents of war file
 MANIFEST=\
 META-INF/context.xml \
 WEB-INF/classes/oracle.class \
 WEB-INF/classes/delphi/SHA1.class \
-${JAVADBCONNECTION} \
+WEB-INF/lib/postgresql-jdbc.jar \
 WEB-INF/properties \
 WEB-INF/web.xml \
 images/dice.png \
@@ -49,6 +47,7 @@ DEPS=\
 servlet/META-INF/context.xml \
 servlet/WEB-INF/classes/delphi/SHA1.class \
 servlet/WEB-INF/classes/oracle.class \
+servlet/WEB-INF/lib/postgresql-jdbc.jar \
 servlet/WEB-INF/properties \
 servlet/WEB-INF/web.xml \
 servlet/script/style.css \
@@ -85,6 +84,9 @@ $(WARPATH)/delphi/SHA1.class: SHA1.java
 
 servlet/META-INF/context.xml: $(PROPS)
 	cp $@,$(DRIVER) $@
+
+servlet/WEB-INF/lib/postgresql-jdbc.jar: artifact/postgresql-42.7.4.jar
+	cp -p $< $@
 
 servlet/WEB-INF/web.xml: servlet/WEB-INF/web.xml,generic
 	cp -p $< $@

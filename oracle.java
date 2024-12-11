@@ -257,16 +257,17 @@ public class oracle extends HttpServlet
         try {
            Connection connection = getConnection(request, response, out);
 	   if (connection == null) {
-	     response.sendError(403);	// Forbidden
 	     //response.sendError(402);	// Payment Required
-             //diagnostics(out, "[META-INF/context.xml] connection failed!");
+	     response.sendError(503);	// Service Unavailable
 	     return;
 	   }
 
 	   // initialize parameters
 	   HttpSession session = request.getSession(true);
 	   String requestor = request.getRemoteAddr();
-	   Long inet = IPv4toLong(requestor);
+	   Long inet = IPtoLong(requestor);
+           //diagnostics(out, "processRequest(oracle.java) requestor => "
+	   //			+ requestor + " (" + inet + ")");
 
 	   // session global attributes
 	   session.setAttribute("ipv4", requestor);
@@ -385,7 +386,7 @@ public class oracle extends HttpServlet
     {
 	Date created  = new Date(session.getCreationTime());
         Date accessed = new Date(session.getLastAccessedTime());
-	Long inet = IPv4toLong(requestor);
+	Long inet = IPtoLong(requestor);
 	String sessid = session.getId();
 
         out.println("Session => "+ sessid +"<br>");
@@ -472,14 +473,28 @@ public class oracle extends HttpServlet
         out.println("</html>");
     }
 
-    // return IPv4 address as long integer
-    protected static long IPv4toLong(String ip)
+    // return IPv4 (or IPv6) address as long integer
+    protected static long IPtoLong(String ip)
     {
-        String[] octect = ip.split("\\.");
-        return (Long.parseLong(octect[0]) << 24) +
-               (Integer.parseInt(octect[1]) << 16) +
-               (Integer.parseInt(octect[2]) << 8) +
-               Integer.parseInt(octect[3]);
+        long result = 0;
+        String[] address = ip.split("\\."); // IPv4
+        try {
+          result = (Long.parseLong(address[0]) << 24) +
+                   (Integer.parseInt(address[1]) << 16) +
+                   (Integer.parseInt(address[2]) << 8) +
+                   Integer.parseInt(address[3]);
+        } catch (Exception ex) {
+          address = ip.split(":"); // IPv6
+          result = (Long.parseLong(address[0]) << 56) +
+                   (Integer.parseInt(address[1]) << 48) +
+                   (Integer.parseInt(address[2]) << 40) +
+                   (Integer.parseInt(address[3]) << 32) +
+                   (Integer.parseInt(address[4]) << 24) +
+                   (Integer.parseInt(address[5]) << 16) +
+                   (Integer.parseInt(address[6]) << 8) +
+                   Integer.parseInt(address[7]);
+        }
+        return result;
     }
 
     protected void redirect(HttpServletRequest request,
